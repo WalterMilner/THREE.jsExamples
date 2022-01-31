@@ -97,7 +97,7 @@
 			geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 			material = new THREE.MeshBasicMaterial({
 				color: 0xff0000
-			});
+			}); // single-sided
 			const mesh = new THREE.Mesh(geometry, material);
 			scene.add(mesh);
 
