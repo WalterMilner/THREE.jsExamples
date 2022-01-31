@@ -62,23 +62,23 @@
 
 		function processKey(event) {
 			const delta = 0.1
-			const keyCode = String.fromCharCode(event.which);
-			if (keyCode == 'Q') {
+		
+			if (event.key == 'q') {
 				camera.position.x += (delta);
 			}
-			if (keyCode == 'W') {
+			if (event.key == 'w') {
 				camera.position.x -= (delta);
 			}
-			if (keyCode == 'A') {
+			if (event.key == 'a') {
 				camera.position.y += (delta);
 			}
-			if (keyCode == 'S') {
+			if (event.key == 's') {
 				camera.position.y -= (delta);
 			}
-			if (keyCode == 'Z') {
+			if (event.key == 'z') {
 				camera.position.z += (delta);
 			}
-			if (keyCode == 'X') {
+			if (event.key == 'x') {
 				camera.position.z -= (delta);
 			}
 
