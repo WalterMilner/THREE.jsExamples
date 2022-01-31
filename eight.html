@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Eight - lighting and materials</title>
+	<style>
+		#threejsContainer {
+			width: 400px;
+			height: 400px;
+			border: thin red solid;
+			/* so we can see it */
+		}
+	</style>
+	<script src="js/three.js"></script>
+	<script>
+		var scene
+		var camera
+		var renderer
+		var plane;
+
+		function init() {
+			// setup
+			renderer = new THREE.WebGLRenderer();
+			// get container div
+			var container = document.getElementById("threejsContainer");
+			// add renderer DOM element to it
+			container.appendChild(renderer.domElement);
+			var width = window.getComputedStyle(container).width;
+			var height = window.getComputedStyle(container).height;
+			width = parseInt(width);
+			height = parseInt(height);
+			renderer.setSize(width, height);
+
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+
+			camera.up = new THREE.Vector3(0, 0, 1);
+			camera.position.set(10, 10, 10);
+			camera.lookAt(0, 0, 0);
+
+			// add lighting
+			const ambient = new THREE.AmbientLight(0x801010); // soft red light
+			scene.add(ambient);
+			// blue directional light at medium intensity shining from y.
+			const directionalLight = new THREE.DirectionalLight(0x0000ff, 0.7);
+			scene.add(directionalLight);
+
+			// draw 3 axes
+			// x is blue
+			var material = new THREE.LineBasicMaterial({
+				color: 0x0000ff
+			});
+			var points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(10, 0, 0));
+			var geometry = new THREE.BufferGeometry().setFromPoints(points);
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+			// y is green
+			material = new THREE.LineBasicMaterial({
+				color: 0x00ff00
+			});
+			points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(0, 10, 0));
+			geometry = new THREE.BufferGeometry().setFromPoints(points);
+			line = new THREE.Line(geometry, material);
+			scene.add(line);
+			// z is red
+			material = new THREE.LineBasicMaterial({
+				color: 0xff0000
+			});
+			points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(0, 0, 10));
+			geometry = new THREE.BufferGeometry().setFromPoints(points);
+			line = new THREE.Line(geometry, material);
+			scene.add(line);
+
+			geometry = new THREE.PlaneGeometry(14, 10);
+			material = new THREE.MeshPhongMaterial();
+			material.side = THREE.DoubleSide;
+			plane = new THREE.Mesh(geometry, material);
+			scene.add(plane);
+
+			render();
+		}
+
+		function render() {
+			renderer.render(scene, camera);
+			plane.rotation.x += 0.05;
+			requestAnimationFrame(render);
+		}
+	</script>
+
+</head>
+
+<body onload="init()">
+	<div>A header</div>
+	<div id="threejsContainer"></div>
+	<!--will be inside this-->
+	<div>More stuff</div>
+</body>
+
+</html>

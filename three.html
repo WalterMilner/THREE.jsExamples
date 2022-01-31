@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Three - move camera with keyboard</title>
+	<script src="js/three.js"></script>
+	<script>
+		var scene
+		var camera
+		var renderer
+
+		function init() {
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			camera.up = new THREE.Vector3(0, 0, 1);
+			camera.position.set(10, 10, 10);
+			camera.lookAt(0, 0, 0);
+
+
+			// draw 3 axes
+			// x is blue
+			var material = new THREE.LineBasicMaterial({
+				color: 0x0000ff
+			});
+			var points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(10, 0, 0));
+			var geometry = new THREE.BufferGeometry().setFromPoints(points);
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+			// y is green
+			material = new THREE.LineBasicMaterial({
+				color: 0x00ff00
+			});
+			points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(0, 10, 0));
+			geometry = new THREE.BufferGeometry().setFromPoints(points);
+			line = new THREE.Line(geometry, material);
+			scene.add(line);
+			// z is red
+			material = new THREE.LineBasicMaterial({
+				color: 0xff0000
+			});
+			points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(0, 0, 10));
+			geometry = new THREE.BufferGeometry().setFromPoints(points);
+			line = new THREE.Line(geometry, material);
+			scene.add(line);
+
+			renderer.render(scene, camera);
+			document.addEventListener("keydown", processKey, false);
+
+
+		}
+
+		function processKey(event) {
+			const delta = 0.1
+			const keyCode = String.fromCharCode(event.which);
+			if (keyCode == 'Q') {
+				camera.position.x += (delta);
+			}
+			if (keyCode == 'W') {
+				camera.position.x -= (delta);
+			}
+			if (keyCode == 'A') {
+				camera.position.y += (delta);
+			}
+			if (keyCode == 'S') {
+				camera.position.y -= (delta);
+			}
+			if (keyCode == 'Z') {
+				camera.position.z += (delta);
+			}
+			if (keyCode == 'X') {
+				camera.position.z -= (delta);
+			}
+
+			camera.lookAt(0, 0, 0);
+			renderer.render(scene, camera);
+		};
+	</script>
+</head>
+
+<body onload="init()">
+</body>
+
+</html>
