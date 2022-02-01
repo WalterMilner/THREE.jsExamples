@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Eleven - colour triangle</title>
+	<style>
+		#threejsContainer {
+			width: 400px;
+			height: 400px;
+			border: thin red solid;
+			/* so we can see it */
+		}
+	</style>
+	<script src="js/three.js"></script>
+	<script>
+		var scene
+		var camera
+		var renderer
+		var vertices, colours, geometry, material;
+
+		function init() {
+			// setup
+			renderer = new THREE.WebGLRenderer();
+			// get container div
+			var container = document.getElementById("threejsContainer");
+			// add renderer DOM element to it
+			container.appendChild(renderer.domElement);
+			var width = window.getComputedStyle(container).width;
+			var height = window.getComputedStyle(container).height;
+			width = parseInt(width);
+			height = parseInt(height);
+			renderer.setSize(width, height);
+
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+
+			camera.up = new THREE.Vector3(0, 0, 1);
+			camera.position.set(10, 10, 5);
+			camera.lookAt(0, 0, 0);
+
+			// add lighting
+			const ambient = new THREE.AmbientLight(0x808080); // soft white light
+			scene.add(ambient);
+			// blue directional light at medium intensity shining from y.
+			const directionalLight = new THREE.DirectionalLight(0x0000ff, 0.7);
+			scene.add(directionalLight);
+
+			// draw axes
+			// x is blue
+			var material = new THREE.LineBasicMaterial({
+				color: 0x0000ff
+			});
+			var points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(10, 0, 0));
+			var geometry = new THREE.BufferGeometry().setFromPoints(points);
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+			// y is green
+			material = new THREE.LineBasicMaterial({
+				color: 0x00ff00
+			});
+			points = [];
+			points.push(new THREE.Vector3(0, 0, 0));
+			points.push(new THREE.Vector3(0, 10, 0));
+			geometry = new THREE.BufferGeometry().setFromPoints(points);
+			line = new THREE.Line(geometry, material);
+			scene.add(line);
+
+			// make a coloured triangle
+			// 3 vertices, each has 3 co-ords, so a total of 9 coords
+			// Each vertex has 3 colour components, so 9 again
+			vertices = new Float32Array(9);
+			colors = new Float32Array(9);
+			index = 0;
+
+			vertices[index] = 10; // x
+			vertices[index + 1] = 10; // y
+			vertices[index + 2] = 0; // z - one corner
+			vertices[index + 3] = 0; // x
+			vertices[index + 4] = 0; // y
+			vertices[index + 5] = 0; // z - corner 2
+			vertices[index + 6] = 0; // x
+			vertices[index + 7] = 0; // y
+			vertices[index + 8] = 10; // z - corner 3
+
+			colors[index] = 1; // 
+			colors[index + 1] = 0; // 
+			colors[index + 2] = 0; // one corner red
+			colors[index + 3] = 0; // 
+			colors[index + 4] = 1; // 
+			colors[index + 5] = 0; // corner 2 green
+			colors[index + 6] = 0; // 
+			colors[index + 7] = 0; // 
+			colors[index + 8] = 1; // corner 3 blue
+
+			material = new THREE.MeshBasicMaterial({
+				vertexColors: THREE.VertexColors,
+				side: THREE.DoubleSide
+			});
+
+			geometry = new THREE.BufferGeometry();
+			geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+			geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+			const mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+
+			render();
+		}
+
+		function z(x, y) // will range -10 to +10
+		{
+			return x * y / 10;
+		}
+		// set up vertices with colours for a square, corner at x,y, unit length
+		// need to draw as 2 triangles
+		function addSquare(x, y) {
+			// one triangle
+			vertices[index] = x;
+			vertices[index + 1] = y;
+			vertices[index + 2] = z(x, y);
+
+
+
+		}
+
+		function render() {
+			renderer.render(scene, camera);
+			// get length of projection of camera vector on x y plane
+			var r = Math.sqrt(camera.position.x * camera.position.x + camera.position.y * camera.position.y);
+			// get angle of that
+			var angle = Math.atan2(camera.position.y, camera.position.x);
+			// change x and y components
+			camera.position.x = r * Math.cos(angle + 0.005);
+			camera.position.y = r * Math.sin(angle + 0.005);
+			camera.lookAt(0, 0, 0);
+			requestAnimationFrame(render);
+		}
+	</script>
+
+</head>
+
+<body onload="init()">
+	<div>A header</div>
+	<div id="threejsContainer"></div>
+	<!--will be inside this-->
+	<div>More stuff</div>
+</body>
+
+</html>
